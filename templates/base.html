@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>The Udacity Blog</title>
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+	<!-- Growl -->
+	<link rel="stylesheet" href="/assets/css/jquery.growl.css">
+
+	<!-- custom styles -->
+	<link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+
+<body>
+<div class="container">
+	<div class="row">
+		<div class="col-sm-6 col-sm-offset-3 text-center">
+			<a href="/" class="main-title">The Udacity Blog</a>
+		</div>
+		<div class="col-sm-3 text-right">
+			{% if user %}
+				Hi {{user.name}}! | <a href="/logout">Logout</a>
+			{% else %}
+				<a href="/login">Login</a> | <a href="/signup">Signup</a>
+			{% endif %}
+		</div>
+	</div>
+
+	<div id="content">
+		{% block content %}
+		{% endblock %}
+	</div>
+
+</div>
+
+
+<div class="modal fade modal-confirm" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Confirm</h4>
+			</div>
+			<div class="modal-body text-center">
+				<h4>Are you sure you want to delete?</h4>
+				<button type="button" id="confirm-yes" class="btn btn-danger">Yes</button>
+        		<button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+        		<input type="hidden" name="eid" value="">
+        		<input type="hidden" name="type" value="">
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Latest compiled and minified bootstrap javascript -->
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script src="/assets/js/jquery.growl.js"></script>
+
+<script>
+	$(function() {
+		// DELETE BLOG ENTRY
+		var $confirm = $('.modal-confirm');
+
+		$confirm.on('show.bs.modal', function (e) {
+			var $b = $(e.relatedTarget),
+				typ = $b.data('type'),
+			    id = $b.data('id');
+
+			$('input[name="eid"]', this).val(id);
+			$('input[name="type"]', this).val(typ);
+		});
+
+		// clicking on 'Yes' confirmation
+		$('#confirm-yes').click(function() {
+			var eid = $('input[name="eid"]', $confirm).val(),
+				type = $('input[name="type"]', $confirm).val();
+
+			$confirm.modal('hide');
+
+			// ajax call to remove blog entry or comment
+			$.post(
+				'/delete',
+				{'item': eid, 'type': type},
+				function(response) {
+					if (response.result) {
+						if (type == 'entry') {
+							$.growl.notice({title: 'Success', message: 'Your blog entry has been removed.', location: 'tc', duration: 5000});
+
+							// fade out html entry
+							$('#entry-' + eid).fadeOut(1000, function() {$(this).remove()});
+						} else if (type == 'comment') {
+							$.growl.notice({title: 'Success', message: 'Comment has been removed.', location: 'tc', duration: 5000});
+							location.reload();
+						}
+					} else {
+						$.growl.error({title: 'Error', message: 'There was a problem encountered trying to delete item!', location: 'tc', duration: 5000});
+					}
+				}
+			);
+		});
+
+		// LIKE BLOG ENTRY
+		$('.entry-like').click(function(e) {
+			e.preventDefault();
+
+			var eid = $(this).data('id'),
+			    star = $(this).find('.glyphicon'),
+			    action = star.hasClass('glyphicon-star-empty') ? 'add' : 'delete';
+
+			// like/unlike - add/remove favorite
+			$.post(
+				'/favorite',
+				{'entry': eid, 'action': action},
+				function(response) {
+					if (response.result) {
+						$.growl.notice({title: 'Success', message: 'Your request has been saved.', location: 'tc', duration: 5000});
+						star.toggleClass('glyphicon-star glyphicon-star-empty');
+
+					} else {
+						$.growl.error({title: 'Error', message: 'There was a problem processing your request.', location: 'tc', duration: 5000});
+					}
+				}
+			);
+		});
+
+		// EDIT COMMENT
+		$('.edit-comment').click(function(e) {
+			e.preventDefault();
+
+			var cid = $(this).data('id'),
+				  f = $(this).closest('.comment').find('.comment-edit-form');
+
+			f.find('.alert-danger').remove();
+			f.show();
+			f.prev('div').hide();
+		});
+
+		// SAVE COMMENT
+		$('.save-comment').click(function(e) {
+			var f = $(this).closest('form'),
+				cid = $('input[name="cid"]', f).val(),
+				content = $.trim($('textarea[name="content"]', f).val());
+
+				if (content == '') {
+					$('textarea[name="content"]', f).after(
+						'<div class="alert alert-danger m-t-5 fs-11">Comment is required.</div>'
+					);
+					return false;
+				}
+
+				$.post(
+					'/comment/edit',
+					{'comment': cid, 'content': content},
+					function(response) {
+						if (response.result) {
+							$.growl.notice({title: 'Success', message: 'Comment was saved. Page will reload automatically...', location: 'tc', duration: 5000});
+							location.reload();
+
+						} else {
+							$.growl.error({title: 'Error', message: 'There was a problem saving comment.', location: 'tc', duration: 5000});
+						}
+					}
+				);
+		});
+
+		// DELETE COMMENT
+
+	});
+</script>
+</body>
+</html>

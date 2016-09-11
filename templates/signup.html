@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+	<div class="col-sm-offset-2 col-sm-8">
+		<form method="post" class="form-horizontal">
+			<div class="form-group">
+				<label for="username" class="col-sm-3 control-label">Username</label>
+				<div class="col-sm-5">
+					<input type="text" name="username" id="username" value="{{username}}" class="form-control">
+				</div>
+				<div class="col-sm-4 fs-10">
+					<div class="{{'hidden' if not error_username else ''}}">
+						<div class="alert alert-danger">{{error_username}}</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="password" class="col-sm-3 control-label">Password</label>
+				<div class="col-sm-5">
+					<input type="password" name="password" value="" class="form-control">
+				</div>
+				<div class="col-sm-4 fs-10">
+					<div class="{{'hidden' if not error_password else ''}}">
+						<div class="alert alert-danger">{{error_password}}</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="verify" class="col-sm-3 control-label">Verify Password</label>
+				<div class="col-sm-5">
+					<input type="password" name="verify" value="" class="form-control">
+				</div>
+				<div class="col-sm-4 fs-10">
+					<div class="{{'hidden' if not error_verify else ''}}">
+						<div class="alert alert-danger">{{error_verify}}</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="email" class="col-sm-3 control-label">Email <span class="fs-11">(Optional)</span></label>
+				<div class="col-sm-5">
+					<input type="text" name="email" id="email" value="{{email}}" class="form-control">
+				</div>
+				<div class="col-sm-4 fs-10">
+					<div class="{{'hidden' if not error_email else ''}}">
+						<div class="alert alert-danger">{{error_email}}</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-offset-3 col-sm-9">
+					<button type="submit" class="btn btn-default">Submit</button>
+				</div>
+			</div>
+		</form>
+
+		<div class="alert alert-info text-center">
+			Already registered?  <a href="/login" class="alert-link">Login here!</a>
+		</div>
+	</div>
+</div>
+{% endblock %}

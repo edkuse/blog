@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form action="/" class="form-horizontal">
+	<div class="form-group">
+		<div class="col-sm-4">
+			{% if user and user.name == username %}
+				<a href="/edit" class="add-entry"><span class="glyphicon glyphicon-plus fs-14"></span> Add Entry</a>
+			{% endif %}
+		</div>
+		<div class="col-sm-4">
+			<div class="row">
+				<label for="username" class="col-sm-2 control-label text-right p-r-0">View:</label>
+				<div class="col-sm-8">
+					<select id="username" name="username" class="form-control">
+						<option value="">--- Select User ---</option>
+						{% for u in users %}
+							<option value="{{u.name}}"{{' selected="selected"' if u.name == username else ''}}>{{u.name}}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div class="col-sm-2 p-l-0">
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-4"></div>
+	</div>
+</form>
+
+
+
+{% if entries and entries.count() %}
+{% for entry in entries %}
+
+<div id="entry-{{entry.key().id()}}" class="post">
+	<div class="post-heading">
+		{% if user and user.key().id() != entry.user %}
+			<a href="#" class="entry-like" title="{{'Unlike' if favorites and entry.key().id() in favorites else 'Like'}} this entry!" data-id="{{entry.key().id()}}">
+				<span class="glyphicon glyphicon-star{{'' if favorites and entry.key().id() in favorites else '-empty'}}"></span>
+			</a> 
+		{% endif %}
+		<a href="/entry/{{entry.key().id()}}" class="post-title">{{entry.subject}}</a>
+		<div class="post-date">{{entry.created.strftime("%b %d, %Y")}}</div>
+	</div>
+	{% if user and user.name == username %}
+	<div class="post-edit">
+		<a href="/edit/{{entry.key().id()}}" title="Edit Blog Entry">
+			<span class="glyphicon glyphicon-edit fs-14 blue"></span>
+		</a>
+		<a href="#" class="delete-entry" data-id="{{entry.key().id()}}" data-type="entry" title="Delete Blog Entry" data-toggle="modal" data-target=".modal-confirm">
+			<span class="glyphicon glyphicon-trash fs-14 red"></span>
+		</a>
+	</div>
+	{% endif %}
+	<div class="post-content">{{entry.content.replace("\n", "<br>") | safe}}</div>
+
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="post-modified">Last Updated: {{entry.last_modified.strftime("%m/%d/%Y %I:%M %p")}}</div>
+		</div>
+		<div class="col-sm-6 text-right">
+			<div class="post-comments">
+				<a href="/entry/{{entry.key().id()}}#comments">{{comments[entry.key().id()] if comments and entry.key().id() in comments else 0}} comments</a>
+			</div>
+		</div>
+	</div>
+</div>
+<br><br>
+
+{% endfor %}
+{% elif username %}
+<div class="alert alert-info">
+	No blog entries were found!
+</div>
+{% endif %}
+
+{% endblock %}

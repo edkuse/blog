@@ -1,0 +1,123 @@
+body {
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 14px;
+	color: #333;
+}
+
+h2 {font-size: 24px; font-weight: bold; margin-bottom: 20px;}
+/*label {display: block; font-size: 20px;}
+label + label {margin-top: 20px;}*/
+textarea {width: 500px; height: 400px; font-size: 17px; font-family: monospace;}
+
+.container {
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+
+.hidden {
+	display: none;
+}
+.main-title {
+	display: block;
+	color: #222;
+	font-size: 40px;
+	font-weight: bold;
+	text-align: center;
+	margin-bottom: 30px;
+	text-decoration: none;
+}
+
+.login-area {font-size: 13px; color: gray; position: absolute; top: 10px; right: 10px;}
+.login-link {color: gray; text-decoration: none;}
+.login-link:visited {color: gray;}
+.login-link:hover {text-decoration: underline;}
+.post + .post {margin-top: 15px;}
+.post-heading {position: relative; border-bottom: 3px solid #666;}
+.post-title {font-size: 24px; font-weight: bold; text-decoration: none; color: #333;}
+.post-title:visisted {color: #333;}
+.post-date {position: absolute; right: 0px; bottom: 0px; color: #999;}
+.post-edit {
+	margin-top: 5px;
+	text-align: right;
+	padding: 3px 15px;
+	background: #eee;
+}
+.post-edit a {
+	display: inline-block;
+	margin: 0 0 0 5px;
+}
+.post-content {margin-top: 5px;}
+.post-modified {
+	font-size: 11px;
+	color: #999;
+	margin: 10px 0;
+}
+.entry-like {
+	font-size: 24px;
+	color: #ffd700;
+}
+.entry-like:hover, .entry-like:active, .entry-like:focus {
+	color: #ffd700;
+	text-decoration: none;
+}
+.age {position: absolute; bottom: 0px; right: 0px; color: gray; font-size: 12px;}
+
+.add-entry, .add-comment {
+	font-weight: bold;
+	font-size: 18px;
+}
+
+.comment {margin-bottom: 25px;}
+.comment-heading {background: #ddd; padding:5px;}
+.comment-content {padding: 5px;}
+.comment-date {text-align:right; color: #666;}
+.comment-modified {
+	font-size: 11px;
+	color: #999;
+	margin: 10px 0;
+}
+
+/*
+ * Colors
+ */
+.blue {color: #067ab4 !important;}
+.red {color: red !important;}
+.yellow {color: yellow !important;}
+
+/*
+ * Font Sizes
+ */
+.fs-9 {font-size: 9px !important;}
+.fs-10 {font-size: 10px !important;}
+.fs-11 {font-size: 11px !important;}
+.fs-12 {font-size: 12px !important;}
+.fs-13 {font-size: 13px !important;}
+.fs-14 {font-size: 14px !important;}
+.fs-15 {font-size: 15px !important;}
+.fs-16 {font-size: 16px !important;}
+.fs-17 {font-size: 17px !important;}
+.fs-18 {font-size: 18px !important;}
+.fs-24 {font-size: 24px !important;}
+
+/*
+ * Margins
+ */
+.m-a-5 {margin: 5px !important;}
+.m-t-5 {margin-top: 5px !important;}
+
+/*
+ * Paddings
+ */
+.p-l-0 {padding-left: 0 !important;}
+.p-r-0 {padding-right: 0 !important;}
+
+/*
+ * Growls
+ */
+ .growl {
+ 	opacity: 0.95;
+ 	filter: alpha(opacity=95);
+ }
+.growl.growl-notice {
+	background: #6ebb1f;
+}

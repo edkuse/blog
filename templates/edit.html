@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{{'Edit' if eid else 'New'}} Entry</h2>
+<form method="post">
+	<div class="form-group">
+		<label for="subject">Subject</label>
+		<input type="text" name="subject" id="subject" value="{{subject}}" maxlength="100" class="form-control">
+
+		<div class="fs-11 m-t-5 {{'hidden' if not error_subject else ''}}">
+			<div class="alert alert-danger">{{error_subject}}</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label for="content">Content</label>
+		<textarea id="content" name="content" class="form-control" rows="8">{{content}}</textarea>
+	
+		<div class="fs-11 m-t-5 {{'hidden' if not error_content else ''}}">
+			<div class="alert alert-danger">{{error_content}}</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<button type="button" class="btn btn-default" onclick="window.history.go(-1); return false;">Cancel</button> 
+		<button type="submit" class="btn btn-primary">Submit</button>
+	</div>
+</form>
+{% endblock %}
